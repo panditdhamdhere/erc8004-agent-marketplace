@@ -1,0 +1,39 @@
+[profile.default]
+src = "src"
+out = "out"
+libs = ["lib"]
+solc_version = "0.8.30"
+optimizer = true
+optimizer_runs = 200
+remappings = [
+    "forge-std/=lib/forge-std/src/",
+    "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/",
+]
+
+[fuzz]
+# Fuzz tests run against a mainnet fork; keep the run count modest for public RPCs.
+runs = 64
+
+[rpc_endpoints]
+mainnet = "${ETH_RPC_URL}"
+sepolia = "${SEPOLIA_RPC_URL}"
+
+[fmt]
+line_length = 100
+
+[lint]
+# Reviewed and accepted for this demo:
+# - block-timestamp: deadlines are measured in hours/days, so a few seconds of drift don't matter.
+# - reentrancy-*: every state-changing entry point is nonReentrant and updates status first.
+# - arbitrary-send-eth: payouts only go to the job's client or the agent's locked payee.
+# - unsafe-typecast: uint64(block.timestamp) can't overflow in practice.
+# - unused-return: agentScore ignores summaryValueDecimals on purpose (always 0 here).
+exclude_lints = [
+    "block-timestamp",
+    "reentrancy-eth",
+    "reentrancy-no-eth",
+    "reentrancy-events",
+    "arbitrary-send-eth",
+    "unsafe-typecast",
+    "unused-return",
+]
